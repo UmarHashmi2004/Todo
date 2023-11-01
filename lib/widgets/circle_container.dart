@@ -17,7 +17,7 @@ class CircleContainer extends StatelessWidget {
           shape: BoxShape.circle,
           color: color,
           border: Border.all(
-            width: 3,
+            width: 4,
             color: color,
           )),
       child: Center(child: child),
