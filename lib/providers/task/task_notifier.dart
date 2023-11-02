@@ -20,7 +20,7 @@ class TaskNotifier extends StateNotifier<TaskState> {
     }
   }
 
-  Future<void> getTask(Task task) async {
+  Future<void> deleteTask(Task task) async {
     try {
       await _repository.deleteTask(task);
       getTasks();

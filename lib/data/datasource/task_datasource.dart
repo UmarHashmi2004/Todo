@@ -40,7 +40,7 @@ CREATE TABLE ${DBKeys.dbTable}(
         ${DBKeys.datecolumn} TEXT,
         ${DBKeys.timecolumn} TEXT,
         ${DBKeys.categorycolumn} TEXT,
-        ${DBKeys.isCompletedcolumn} INTEGER,
+        ${DBKeys.isCompletedcolumn} INTEGER
             )''');
   }
 
