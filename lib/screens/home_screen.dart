@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_app_project/config/routes/route_location.dart';
 import 'package:todo_app_project/providers/providers.dart';
 import 'package:todo_app_project/utils/utils.dart';
 import 'package:todo_app_project/widgets/widgets.dart';
-
 import '../data/models/task.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -21,8 +21,9 @@ class HomeScreen extends ConsumerWidget {
     final colors = context.colorScheme;
     final deviceSize = context.deviceSize;
     final TaskState = ref.watch(tasksProvider);
-    final inCompletedTasks = _incompltedTask(TaskState.tasks, ref);
+    final inCompletedTasks = _incompletedTask(TaskState.tasks, ref);
     final completedTasks = _compltedTask(TaskState.tasks, ref);
+    final selectedDate = ref.watch(dateProvider);
 
     return Scaffold(
       body: Stack(
@@ -33,16 +34,19 @@ class HomeScreen extends ConsumerWidget {
                 height: deviceSize.height * 0.3,
                 width: deviceSize.width,
                 color: colors.primary,
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    DisplayWhiteText(
-                      text: '29 October 2023',
-                      fontWeight: FontWeight.bold,
-                      size: 20,
+                    InkWell(
+                      onTap: () => Helpers.selectDate(context, ref),
+                      child: DisplayWhiteText(
+                        text: DateFormat.yMMMd().format(selectedDate),
+                        fontWeight: FontWeight.bold,
+                        size: 20,
+                      ),
                     ),
                     Gap(20),
-                    DisplayWhiteText(
+                    const DisplayWhiteText(
                       text: 'My Todo List',
                       fontWeight: FontWeight.bold,
                       size: 40,
@@ -95,20 +99,26 @@ class HomeScreen extends ConsumerWidget {
 
   List<Task> _compltedTask(List<Task> tasks, WidgetRef ref) {
     final List<Task> filteredTask = [];
+    final date = ref.watch(dateProvider);
 
     for (var task in tasks) {
-      if (task.isCompleted) {
+      final isTaskDay = Helpers.isTaskFromSelectedDate(task, date);
+      if (task.isCompleted && isTaskDay) {
         filteredTask.add(task);
       }
     }
     return filteredTask;
   }
 
-  List<Task> _incompltedTask(List<Task> tasks, WidgetRef ref) {
+  List<Task> _incompletedTask(List<Task> tasks, WidgetRef ref) {
     final List<Task> filteredTask = [];
+    final date = ref.watch(dateProvider);
 
     for (var task in tasks) {
-      if (!task.isCompleted) {
+      final isTaskDay =
+          Helpers.isTaskFromSelectedDate(task, date); // Define isTaskDay here
+      if (!task.isCompleted && isTaskDay) {
+        // Now you can use isTaskDay
         filteredTask.add(task);
       }
     }
